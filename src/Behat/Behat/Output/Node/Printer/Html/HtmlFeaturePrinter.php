@@ -50,6 +50,9 @@ final class HtmlFeaturePrinter implements FeaturePrinter
      */
     public function printHeader(Formatter $formatter, FeatureNode $feature)
     {
+        $htmlTemplate = file_get_contents(__DIR__ . '/template-header.html');
+        $formatter->getOutputPrinter()->writeln($htmlTemplate);
+
         if ($feature instanceof TaggedNodeInterface) {
             $this->printTags($formatter->getOutputPrinter(), $feature->getTags());
         }

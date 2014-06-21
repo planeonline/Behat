@@ -73,5 +73,8 @@ final class HtmlStatisticsPrinter implements StatisticsPrinter
 
             $formatter->getOutputPrinter()->writeln(sprintf('%s (%s)', $timer, $memory));
         }
+
+        $htmlTemplate = file_get_contents(__DIR__ . '/template-footer.html');
+        $formatter->getOutputPrinter()->writeln($htmlTemplate);
     }
 }
