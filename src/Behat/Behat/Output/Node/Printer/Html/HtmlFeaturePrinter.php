@@ -34,6 +34,12 @@ final class HtmlFeaturePrinter implements FeaturePrinter
     private $subIndentText;
 
     /**
+     * Too keep track of printed features
+     * @var bool
+     */
+    static $firstRun = true;
+
+    /**
      * Initializes printer.
      *
      * @param integer $indentation
@@ -50,8 +56,13 @@ final class HtmlFeaturePrinter implements FeaturePrinter
      */
     public function printHeader(Formatter $formatter, FeatureNode $feature)
     {
-        $htmlTemplate = file_get_contents(__DIR__ . '/template-header.html');
-        $formatter->getOutputPrinter()->writeln($htmlTemplate);
+        // IWe only want the html header to be printed on the first feature
+        // (in cases that if we have more than one)
+        if(self::$firstRun){
+            $htmlTemplate = file_get_contents(__DIR__ . '/template-header.html');
+            $formatter->getOutputPrinter()->writeln($htmlTemplate);
+            self::$firstRun = false;
+        }
 
         if ($feature instanceof TaggedNodeInterface) {
             $this->printTags($formatter->getOutputPrinter(), $feature->getTags());
@@ -66,6 +77,8 @@ final class HtmlFeaturePrinter implements FeaturePrinter
      */
     public function printFooter(Formatter $formatter, TestResult $result)
     {
+        $formatter->getOutputPrinter()->writeln('</div> <!-- div class="opened-for-codenpen" -->');
+        $formatter->getOutputPrinter()->writeln('</div> <!-- div class="opened-for-coden" -->');
     }
 
     /**
@@ -93,7 +106,7 @@ final class HtmlFeaturePrinter implements FeaturePrinter
     private function printTitle(OutputPrinter $printer, FeatureNode $feature)
     {
 
-        $printer->write(sprintf('%s{+keyword}%s:{-keyword}', $this->indentText, $feature->getKeyword()));
+        $printer->write(sprintf('<h1> %s', $feature->getKeyword()));
 
         if ($title = $feature->getTitle()) {
             $printer->write(sprintf(' %s', $title));
@@ -115,8 +128,10 @@ final class HtmlFeaturePrinter implements FeaturePrinter
         }
 
         foreach (explode("\n", $feature->getDescription()) as $descriptionLine) {
-            $printer->writeln(sprintf('%s%s', $this->subIndentText, $descriptionLine));
+            $printer->writeln(sprintf('%s', $descriptionLine));
         }
+
+        $printer->writeln('</h1><div class="opened-for-coden">');
 
     }
 

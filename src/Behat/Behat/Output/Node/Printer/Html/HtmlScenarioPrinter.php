@@ -63,7 +63,7 @@ final class HtmlScenarioPrinter implements ScenarioPrinter
 
         $this->printKeyword($formatter->getOutputPrinter(), $scenario->getKeyword());
         $this->printTitle($formatter->getOutputPrinter(), $scenario->getTitle());
-        $this->pathPrinter->printScenarioPath($formatter, $feature, $scenario, mb_strlen($this->indentText, 'utf8'));
+//        $this->pathPrinter->printScenarioPath($formatter, $feature, $scenario, mb_strlen($this->indentText, 'utf8'));
         $this->printDescription($formatter->getOutputPrinter(), $scenario->getTitle());
 
     }
@@ -100,7 +100,7 @@ final class HtmlScenarioPrinter implements ScenarioPrinter
      */
     private function printKeyword(OutputPrinter $printer, $keyword)
     {
-        $printer->write(sprintf('%s{+keyword}%s:{-keyword}', $this->indentText, $keyword));
+        $printer->write(sprintf('<h2>%s', $keyword));
     }
 
     /**
@@ -115,7 +115,7 @@ final class HtmlScenarioPrinter implements ScenarioPrinter
         $title = array_shift($description);
 
         if ('' !== $title) {
-            $printer->write(sprintf(' %s', $title));
+            $printer->write(sprintf(' %s:</h2><div class="opened-for-codepen">', $title));
         }
     }
 
@@ -131,7 +131,7 @@ final class HtmlScenarioPrinter implements ScenarioPrinter
         array_shift($lines);
 
         foreach ($lines as $line) {
-            $printer->writeln(sprintf('%s%s', $this->subIndentText, $line));
+            $printer->writeln(sprintf('%s', $line));
         }
     }
 

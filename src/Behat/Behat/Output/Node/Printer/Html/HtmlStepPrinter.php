@@ -109,9 +109,11 @@ final class HtmlStepPrinter implements StepPrinter
             $definition = $result->getStepDefinition();
             $stepText = $this->textPainter->paintText($stepText, $definition, $result);
         }
-
-        $style = $this->resultConverter->convertResultToString($result);
-        $printer->write(sprintf('%s{+%s}%s %s{-%s}', $this->indentText, $style, $stepType, $stepText, $style));
+        if($stepType == 'Then'){
+            $printer->write(sprintf('<h3>%s %s</h3>', $stepType, $stepText));
+        }else{
+            $printer->write(sprintf('%s %s<br>', $stepType, $stepText));
+        }
     }
 
     /**
@@ -129,7 +131,7 @@ final class HtmlStepPrinter implements StepPrinter
             $text = $this->getArgumentString($argument, !$formatter->getParameter('multiline'));
 
             $indentedText = implode("\n", array_map(array($this, 'subIndent'), explode("\n", $text)));
-            $formatter->getOutputPrinter()->writeln(sprintf('{+%s}%s{-%s}', $style, $indentedText, $style));
+            $formatter->getOutputPrinter()->writeln(sprintf('<div>%s</div>',$indentedText));
         }
     }
 
